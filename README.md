@@ -12,4 +12,4 @@ Script for automating update process for [GTL: Gemini Tiny Logs].
 
 Script for adding Gemini feed to [Antenna].  
 
-[Antenna]: gemini://warmedal.se/~antenna/about.gmi
+[Antenna]: https://proxy.flounder.online/warmedal.se/~antenna/about.gmi
