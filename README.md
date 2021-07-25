@@ -6,4 +6,4 @@ Sometimes I have been writing some Bash script which is too small for its own re
 
 Script for automating update process for [GTL: Gemini Tiny Logs]. 
 
-([GTL: Gemini Tiny Logs]): https://github.com/bacardi55/gtl/blob/main/README.md
+[GTL: Gemini Tiny Logs]: https://github.com/bacardi55/gtl/blob/main/README.md
