@@ -13,3 +13,11 @@ Script for automating update process for [GTL: Gemini Tiny Logs].
 Script for adding Gemini feed to [Antenna].  
 
 [Antenna]: https://proxy.flounder.online/warmedal.se/~antenna/about.gmi
+
+## fingerclub.sh
+
+Fingerclub script for pro-finger users. ;-)
+
+## galactic.sh
+
+Script for making ASCII-art map of neighborhood names.
