@@ -21,4 +21,8 @@ do
 	echo -e "\n\n" >> $tmpfile
 done
 
+# header with finger time
+date=$(date)
+sed -i "1s/^/$ESC$RED# Finger club - $date$ESC\n\n/" $tmpfile
+
 less -RisW $tmpfile && rm -f $tmpfile
