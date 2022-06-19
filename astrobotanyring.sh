@@ -11,9 +11,9 @@ PLANT_RING=(
 # temp file
 if [ ! -d "/tmp" ];then
 [[ ! -d "$HOME/.tmp" ]] && mkdir -p "$HOME/.tmp"
-        tmpfile=$(mktemp ~/.tmp/fingerclub.XXXXXX.gmi)
+        tmpfile=$(mktemp ~/.tmp/plantring.XXXXXX.gmi)
 else
-        tmpfile=$(mktemp /tmp/fingerclub.XXXXXX.gmi)
+        tmpfile=$(mktemp /tmp/plantring.XXXXXX.gmi)
 fi
 
 status=""
