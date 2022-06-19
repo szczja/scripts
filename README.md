@@ -21,3 +21,7 @@ Fingerclub script for pro-finger users. ;-)
 ## galactic.sh
 
 Script for making ASCII-art map of neighborhood names.
+
+## astrobotanyring.sh
+
+Summary a water status of plants in Astrobotany plant ring. 
