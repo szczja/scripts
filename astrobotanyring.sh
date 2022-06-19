@@ -43,7 +43,7 @@ echo -en $status | awk -F ':' '{printf "=> gemini://astrobotany.mozz.us/app/visi
 
 # header with probe time
 date=$(date)
-sed -i "1s/^/#Astrobotany ring - $date\n/" $tmpfile
+sed -i "1s/^/#Astrobotany ring - $date\n\n/" $tmpfile
 
 # amfora as gemini browser of choice
 amfora $tmpfile && rm -f $tmpfile
