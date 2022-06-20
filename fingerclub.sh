@@ -5,8 +5,9 @@
 ESC=$(echo -e "\033")
 RED="[31m"
 CLUB=(
-	warsaw@graph.no
-	random@happynetbox.com
+	warsaw@graph.no			# weather forecast
+	random@happynetbox.com		# 1st finger service 
+	jcs@plan.cat			# 2nd finger service 
 	szczezuja@szczezuja.space 
 	alex@flounder.online 
 	phlog@1436.ninja
