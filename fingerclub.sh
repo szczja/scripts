@@ -4,7 +4,13 @@
 
 ESC=$(echo -e "\033")
 RED="[31m"
-CLUB=(warsaw@graph.no szczezuja@szczezuja.space alex@flounder.online phlog@1436.ninja)
+CLUB=(
+	warsaw@graph.no
+	random@happynetbox.com
+	szczezuja@szczezuja.space 
+	alex@flounder.online 
+	phlog@1436.ninja
+)
 
 if [ ! -d "/tmp" ];then
 [[ ! -d "$HOME/.tmp" ]] && mkdir -p "$HOME/.tmp"
