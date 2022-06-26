@@ -24,4 +24,8 @@ Script for making ASCII-art map of neighborhood names.
 
 ## astrobotanyring.sh
 
-Summary a water status of plants in Astrobotany plant ring. 
+Summary a water status of plants in Astrobotany plant ring.
+
+## browser.sh
+
+Support for browsing Gopher, Gemini and HTTP in the same time by setting $BROWSER environment variable.  
