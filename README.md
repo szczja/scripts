@@ -28,4 +28,8 @@ Summary a water status of plants in Astrobotany plant ring.
 
 ## browser.sh
 
-Support for browsing Gopher, Gemini and HTTP in the same time by setting $BROWSER environment variable.  
+Support for browsing Gopher, Gemini and HTTP in the same time by setting $BROWSER environment variable.
+
+## generate_capsule_map.sh
+
+Script for making hashtag map for gemlog.
