@@ -3,7 +3,6 @@
 
 PLANT_RING=(
 	5d129edfe438478d8ec5a0e57c69a505
-	06206c2d3c1a408da14fcee89d04f87f
 	dafd7db795e145dcbd052e5a83e869d7
 	d0263448b84d4238a21f8c450009172d
 )
@@ -39,7 +38,7 @@ do
 done
 
 # format output to gemtex, and sort by water status in column 3rd
-echo -en $status | awk -F ':' '{printf "=> gemini://astrobotany.mozz.us/app/visit/%s %s %s\n",$1,$4,$3}' | sort -k 3 > $tmpfile
+echo -en $status | awk -F ':' '{printf "=> gemini://astrobotany.mozz.us/app/visit/%s %s %s\n",$1,$4,$3}' | sort -V -k 3 > $tmpfile
 
 # header with probe time
 date=$(date)
