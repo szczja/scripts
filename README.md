@@ -33,3 +33,7 @@ Support for browsing Gopher, Gemini and HTTP in the same time by setting $BROWSE
 ## generate_capsule_map.sh
 
 Script for making hashtag map for gemlog.
+
+## astrobotanywell.sh
+
+Script for watering a Astrobotany plant
