@@ -43,4 +43,25 @@ echo -en $status | awk -F ':' '{printf "gemini://astrobotany.mozz.us/app/visit/%
 # the most wiling plant
 url=$(cat $tmpfile | head -n 1)
 
+# connect to the /water URL for the plant
 output=$(openssl s_client -crlf -cert ~/.local/share/amfora/certs/astrobotany/cert.pem -key ~/.local/share/amfora/certs/astrobotany/key.pem -quiet -connect "astrobotany.mozz.us:1965" <<< $url 2>/dev/null)
+
+# parse a response, we are awaiting 30 status for rederiction
+pattern="^30 (.)*$"
+if [[ $output =~ $pattern ]]
+then
+	# get the second field, and strip the non-print characters
+	url=$(echo $output | cut -d' ' -f 2 | tr -dc '[:print:]')
+	newurl="gemini://astrobotany.mozz.us"
+	newurl+=$url
+	
+	# connect to the final plant URL
+	output=$(openssl s_client -crlf -cert ~/.local/share/amfora/certs/astrobotany/cert.pem -key ~/.local/share/amfora/certs/astrobotany/key.pem -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
+
+	# regexp fit name
+ 	status=$(echo -e $output | grep -Eo 'name : "(.)+"')
+ 	status+=":"
+ 	# regexp fit water and bonus, it should be fixed
+ 	status+=$(echo -e $output | grep -Eo 'water :(.)+{14}[0-9]+%' | grep -Eo '[0-9]+%')
+	echo $status
+fi
