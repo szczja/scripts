@@ -7,6 +7,10 @@ PLANT_RING=(
 	d0263448b84d4238a21f8c450009172d
 )
 
+# cert and key for Astrobotany
+sslcert=~/.local/share/amfora/certs/astrobotany/cert.pem
+sslkey=~/.local/share/amfora/certs/astrobotany/key.pem
+
 # temp file
 if [ ! -d "/tmp" ];then
 [[ ! -d "$HOME/.tmp" ]] && mkdir -p "$HOME/.tmp"
@@ -44,7 +48,7 @@ echo -en $status | awk -F ':' '{printf "gemini://astrobotany.mozz.us/app/visit/%
 url=$(cat $tmpfile | head -n 1)
 
 # connect to the /water URL for the plant
-output=$(openssl s_client -crlf -cert ~/.local/share/amfora/certs/astrobotany/cert.pem -key ~/.local/share/amfora/certs/astrobotany/key.pem -quiet -connect "astrobotany.mozz.us:1965" <<< $url 2>/dev/null)
+output=$(openssl s_client -crlf -cert $sslcert -key $sslkey -quiet -connect "astrobotany.mozz.us:1965" <<< $url 2>/dev/null)
 
 # parse a response, we are awaiting 30 status for rederiction
 pattern="^30 (.)*$"
@@ -56,7 +60,7 @@ then
 	newurl+=$url
 	
 	# connect to the final plant URL
-	output=$(openssl s_client -crlf -cert ~/.local/share/amfora/certs/astrobotany/cert.pem -key ~/.local/share/amfora/certs/astrobotany/key.pem -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
+	output=$(openssl s_client -crlf -cert $sslcert -key $sslkey -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
 
 	# regexp fit name
  	status=$(echo -e $output | grep -Eo 'name : "(.)+"')
