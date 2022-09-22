@@ -7,6 +7,9 @@ PLANT_RING=(
 	d0263448b84d4238a21f8c450009172d
 )
 
+# if there isn't own plant in the ring it could be empty
+MYPLANT=${PLANT_RING[0]}
+
 # cert and key for Astrobotany
 sslcert=~/.local/share/amfora/certs/astrobotany/cert.pem
 sslkey=~/.local/share/amfora/certs/astrobotany/key.pem
@@ -47,6 +50,12 @@ echo -en $status | awk -F ':' '{printf "gemini://astrobotany.mozz.us/app/visit/%
 # the most wiling plant
 url=$(cat $tmpfile | head -n 1)
 
+# there is a different url for watering my plant
+if [[ -z $MYPLANT ]] && [[ $url =~ $MYPLANT ]]
+then    
+	newurl="gemini://astrobotany.mozz.us/plant/water"
+fi 
+
 # connect to the /water URL for the plant
 output=$(openssl s_client -crlf -cert $sslcert -key $sslkey -quiet -connect "astrobotany.mozz.us:1965" <<< $url 2>/dev/null)
 
@@ -66,6 +75,6 @@ then
  	status=$(echo -e $output | grep -Eo 'name : "(.)+"')
  	status+=":"
  	# regexp fit water and bonus, it should be fixed
- 	status+=$(echo -e $output | grep -Eo 'water :(.)+{14}[0-9]+%' | grep -Eo '[0-9]+%')
+ 	status+=$(echo -e $output | grep -Eo 'water :(.)+{14}[0-9]+%')
 	echo $status
 fi
