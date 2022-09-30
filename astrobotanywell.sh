@@ -51,13 +51,15 @@ echo -en $status | awk -F ':' '{printf "gemini://astrobotany.mozz.us/app/visit/%
 url=$(cat $tmpfile | head -n 1)
 
 # there is a different url for watering my plant
-if [[ -z $MYPLANT ]] && [[ $url =~ $MYPLANT ]]
+if [[ $url == *"$MYPLANT"* ]]
 then    
-	newurl="gemini://astrobotany.mozz.us/plant/water"
+	newurl="gemini://astrobotany.mozz.us/app/plant/water"
+else
+	newurl=$url
 fi 
 
 # connect to the /water URL for the plant
-output=$(openssl s_client -crlf -cert $sslcert -key $sslkey -quiet -connect "astrobotany.mozz.us:1965" <<< $url 2>/dev/null)
+output=$(openssl s_client -crlf -cert $sslcert -key $sslkey -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
 
 # parse a response, we are awaiting 30 status for rederiction
 pattern="^30 (.)*$"
