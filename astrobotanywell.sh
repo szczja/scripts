@@ -14,6 +14,12 @@ MYPLANT=${PLANT_RING[0]}
 SSLCERT=~/.local/share/amfora/certs/astrobotany/cert.pem
 SSLKEY=~/.local/share/amfora/certs/astrobotany/key.pem
 
+# read content of a Gemini url passed as $1
+function read_gemini() {
+	output=$(openssl s_client -crlf -cert $SSLCERT -key $SSLKEY -quiet -connect "astrobotany.mozz.us:1965" <<< $1 2>/dev/null)
+	echo -en $output
+}
+
 status=""
 newline=false
 
@@ -21,7 +27,7 @@ for i in "${PLANT_RING[@]}"
 do
 	# get url content
 	url="gemini://astrobotany.mozz.us/public/$i/m1"
-	output=$(openssl s_client -crlf -quiet -connect "astrobotany.mozz.us:1965" <<< $url 2>/dev/null)
+	output=$(read_gemini $url)
 	if [ $newline = true ]
 	then
 		status+="\n"
@@ -48,7 +54,7 @@ else
 fi 
 
 # connect to the /water URL for the plant
-output=$(openssl s_client -crlf -cert $SSLCERT -key $SSLKEY -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
+output=$(read_gemini $newurl)
 
 # parse a response, we are awaiting 30 status for rederiction
 pattern="^30 (.)*$"
@@ -60,7 +66,7 @@ then
 	newurl+=$url
 	
 	# connect to the final plant URL
-	output=$(openssl s_client -crlf -cert $SSLCERT -key $SSLKEY -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
+	output=$(read_gemini $newurl)
 
 	# regexp fit name
  	status=$(echo -e $output | grep -Eo 'name : "(.)+"')
