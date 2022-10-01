@@ -11,8 +11,8 @@ PLANT_RING=(
 MYPLANT=${PLANT_RING[0]}
 
 # cert and key for Astrobotany
-sslcert=~/.local/share/amfora/certs/astrobotany/cert.pem
-sslkey=~/.local/share/amfora/certs/astrobotany/key.pem
+SSLCERT=~/.local/share/amfora/certs/astrobotany/cert.pem
+SSLKEY=~/.local/share/amfora/certs/astrobotany/key.pem
 
 # temp file
 if [ ! -d "/tmp" ];then
@@ -59,7 +59,7 @@ else
 fi 
 
 # connect to the /water URL for the plant
-output=$(openssl s_client -crlf -cert $sslcert -key $sslkey -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
+output=$(openssl s_client -crlf -cert $SSLCERT -key $SSLKEY -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
 
 # parse a response, we are awaiting 30 status for rederiction
 pattern="^30 (.)*$"
@@ -71,7 +71,7 @@ then
 	newurl+=$url
 	
 	# connect to the final plant URL
-	output=$(openssl s_client -crlf -cert $sslcert -key $sslkey -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
+	output=$(openssl s_client -crlf -cert $SSLCERT -key $SSLKEY -quiet -connect "astrobotany.mozz.us:1965" <<< $newurl 2>/dev/null)
 
 	# regexp fit name
  	status=$(echo -e $output | grep -Eo 'name : "(.)+"')
