@@ -14,14 +14,6 @@ MYPLANT=${PLANT_RING[0]}
 SSLCERT=~/.local/share/amfora/certs/astrobotany/cert.pem
 SSLKEY=~/.local/share/amfora/certs/astrobotany/key.pem
 
-# temp file
-if [ ! -d "/tmp" ];then
-[[ ! -d "$HOME/.tmp" ]] && mkdir -p "$HOME/.tmp"
-        tmpfile=$(mktemp ~/.tmp/plantring.XXXXXX.gmi)
-else
-        tmpfile=$(mktemp /tmp/plantring.XXXXXX.gmi)
-fi
-
 status=""
 newline=false
 
@@ -44,11 +36,8 @@ do
 	newline=true
 done
 
-# format output to gemtex, and sort by water status in column 3rd
-echo -en $status | awk -F ':' '{printf "gemini://astrobotany.mozz.us/app/visit/%s/water %s\n",$1,$4}' | sort -V -k 2 | awk '{printf "%s\n",$1}' > $tmpfile
-
-# the most wiling plant
-url=$(cat $tmpfile | head -n 1)
+# format output to gemtex, and sort by water status in column 3rd, and get the first row for the most wiling plant
+url=$(echo -en $status | awk -F ':' '{printf "gemini://astrobotany.mozz.us/app/visit/%s/water %s\n",$1,$4}' | sort -V -k 2 | awk '{printf "%s\n",$1}' | head -n 1)
 
 # there is a different url for watering my plant
 if [[ $url == *"$MYPLANT"* ]]
