@@ -11,6 +11,7 @@ CLUB=(
 	szczezuja@szczezuja.space 
 	alex@flounder.online 
 	phlog@1436.ninja
+	ruario@flounder.online
 )
 
 if [ ! -d "/tmp" ];then
