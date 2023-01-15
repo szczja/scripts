@@ -39,7 +39,7 @@ function get_link_from_header() {
 # get last status of account id as $1
 function get_last_status() {
 	echo "" > $TMPCONTENT
-	get_content "https://mastodon.online/api/v1/accounts/$1/statuses?limit=1"
+	get_content "https://mastodon.online/api/v1/accounts/$1/statuses?limit=1&exclude_replies=true&exclude_reblogs=true"
 	LD=$(jq --raw-output '.[].created_at' <<< cat $TMPCONTENT)
 	LA=$(jq --raw-output '.[].account.username' <<< cat $TMPCONTENT)
 	LC=$(jq --raw-output '.[].content' <<< cat $TMPCONTENT)
