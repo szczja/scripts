@@ -37,3 +37,7 @@ Script for making hashtag map for gemlog.
 ## astrobotanywell.sh
 
 Script for watering a Astrobotany plant
+
+## mastodondigest.sh
+
+Mastodon digest, read last post from all followed accounts by specified account
