@@ -38,12 +38,15 @@ function get_link_from_header() {
 
 # get last status of account id as $1
 function get_last_status() {
+	# start from an empty content file
 	echo "" > $TMPCONTENT
 	get_content "https://mastodon.online/api/v1/accounts/$1/statuses?limit=1&exclude_replies=true&exclude_reblogs=true"
 	LD=$(jq --raw-output '.[].created_at' <<< cat $TMPCONTENT)
 	LA=$(jq --raw-output '.[].account.username' <<< cat $TMPCONTENT)
 	LC=$(jq --raw-output '.[].content' <<< cat $TMPCONTENT)
-	echo -en "$LD - $LA\n---\n$LC"
+	# remove all html tags from a content 
+	LC=$(echo "$LC" | sed 's/<[^>]*>/\n/g')
+	echo -e "@$LD $LA | $LC"
 }
 
 # starting link
@@ -59,4 +62,5 @@ done
 # print last status for every account id in the content
 for LACC in $(jq -r '.[].id' <<< cat $TMPCONTENT); do
 	echo -e $(get_last_status $LACC)
+	echo "---"
 done
