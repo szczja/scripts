@@ -12,9 +12,11 @@ if [ ! -d "/tmp" ];then
 [[ ! -d "$HOME/.tmp" ]] && mkdir -p "$HOME/.tmp"
 	TMPCONTENT=$(mktemp ~/.tmp/mastodondigest.XXXXXX)
 	TMPHEADER=$(mktemp ~/.tmp/mastodondigest.XXXXXX)
+	TMPRESULT=$(mktemp ~/.tmp/mastodondigest.XXXXXX)
 else
 	TMPCONTENT=$(mktemp /tmp/mastodondigest.XXXXXX)
 	TMPHEADER=$(mktemp /tmp/mastodondigest.XXXXXX)
+	TMPRESULT=$(mktemp /tmp/mastodondigest.XXXXXX)
 fi
 
 # get content via curl at $1
@@ -45,8 +47,9 @@ function get_last_status() {
 	LA=$(jq --raw-output '.[].account.username' <<< cat $TMPCONTENT)
 	LC=$(jq --raw-output '.[].content' <<< cat $TMPCONTENT)
 	# remove all html tags from a content 
-	LC=$(echo "$LC" | sed 's/<[^>]*>/\n/g')
-	echo -e "@$LD $LA | $LC"
+	LC=$(echo "$LC" | sed 's/<[^>]*>//g')
+	LC=$(echo "$LC" | sed 's/|//g')
+	echo -e "@$LD | $LA | $LC"
 }
 
 # starting link
@@ -57,10 +60,13 @@ while [ -n "$NEXT_LINK" ]; do
 	# content is appending to a tmp file
 	get_content $NEXT_LINK
 	NEXT_LINK=$(get_link_from_header "$(<$TMPHEADER)")
+	echo -n "."
 done
 
 # print last status for every account id in the content
 for LACC in $(jq -r '.[].id' <<< cat $TMPCONTENT); do
-	echo -e $(get_last_status $LACC)
-	echo "---"
+	echo -e $(get_last_status $LACC) >> $TMPRESULT
+	echo -n "."
 done
+
+sort -h -r $TMPRESULT | less
