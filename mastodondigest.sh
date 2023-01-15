@@ -20,7 +20,7 @@ fi
 # get content via curl at $1
 function get_content() {
 	# appending output to the same file every time
-	curl "$1" -H 'Authorization: Bearer $AUTH' \
+	curl "$1" -s -H 'Authorization: Bearer $AUTH' \
 		--output >(cat >> $TMPCONTENT) \
 		--dump-header $TMPHEADER
 }
@@ -54,8 +54,6 @@ while [ -n "$NEXT_LINK" ]; do
 	# content is appending to a tmp file
 	get_content $NEXT_LINK
 	NEXT_LINK=$(get_link_from_header "$(<$TMPHEADER)")
-
-	echo $NEXT_LINK
 done
 
 # print last status for every account id in the content
