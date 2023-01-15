@@ -19,8 +19,8 @@ fi
 
 # get content via curl at $1
 function get_content() {
+	# appending output to the same file every time
 	curl "$1" -H 'Authorization: Bearer $AUTH' \
-		# appending output to the same file every time
 		--output >(cat >> $TMPCONTENT) \
 		--dump-header $TMPHEADER
 }
@@ -36,15 +36,29 @@ function get_link_from_header() {
 	echo -en $LNEXT_LINK
 }
 
+# get last status of account id as $1
+function get_last_status() {
+	echo "" > $TMPCONTENT
+	get_content "https://mastodon.online/api/v1/accounts/$1/statuses?limit=1"
+	LD=$(jq --raw-output '.[].created_at' <<< cat $TMPCONTENT)
+	LA=$(jq --raw-output '.[].account.username' <<< cat $TMPCONTENT)
+	LC=$(jq --raw-output '.[].content' <<< cat $TMPCONTENT)
+	echo -en "$LD - $LA\n---\n$LC"
+}
+
 # starting link
 NEXT_LINK="https://mastodon.online/api/v1/accounts/$ACCOUNT_NUM/following"
 
 # while next link is not empty in the responded header 
 while [ -n "$NEXT_LINK" ]; do
+	# content is appending to a tmp file
 	get_content $NEXT_LINK
 	NEXT_LINK=$(get_link_from_header "$(<$TMPHEADER)")
 
 	echo $NEXT_LINK
 done
 
-jq --raw-output '.[].acct' <<< cat $TMPCONTENT | less
+# print last status for every account id in the content
+for LACC in $(jq -r '.[].id' <<< cat $TMPCONTENT); do
+	echo -e $(get_last_status $LACC)
+done
