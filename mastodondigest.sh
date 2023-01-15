@@ -7,6 +7,10 @@
 AUTH=`pass mastodon`	# Set up by web preferences 
 ACCOUNT_NUM=151263	# Possible to obtain by https://mastodon.online/api/v2/search
 
+COL_PURPLE='\033[0;35m'
+COL_GRAY='\033[1;30m'
+COL_NO='\033[0m'
+
 # temp files using in this script
 if [ ! -d "/tmp" ];then
 [[ ! -d "$HOME/.tmp" ]] && mkdir -p "$HOME/.tmp"
@@ -49,7 +53,7 @@ function get_last_status() {
 	# remove all html tags from a content 
 	LC=$(echo "$LC" | sed 's/<[^>]*>//g')
 	LC=$(echo "$LC" | sed 's/|//g')
-	echo -e "@$LD | $LA | $LC"
+	echo -e "${COL_PURPLE}@$LD${COL_NO} | ${COL_GRAY}$LA${COL_NO} | $LC"
 }
 
 # starting link
@@ -68,5 +72,6 @@ for LACC in $(jq -r '.[].id' <<< cat $TMPCONTENT); do
 	echo -e $(get_last_status $LACC) >> $TMPRESULT
 	echo -n "."
 done
+echo ""
 
-sort -h -r $TMPRESULT | less
+sort -h -r $TMPRESULT | fold -s | less -R
