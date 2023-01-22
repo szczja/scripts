@@ -68,7 +68,8 @@ while [ -n "$NEXT_LINK" ]; do
 done
 
 # print last status for every account id in the content
-echo -e "# mastodondigest.sh" >> $TMPRESULT
+DATE=$(date)
+echo -e "# mastodondigest.sh - $DATE" >> $TMPRESULT
 # sort by last_status_at date given by mastodon API
 for LACC in $(jq 'sort_by(.last_status_at)' <<< cat $TMPCONTENT | jq -r '.[].id'); do
 	echo -e "$(get_last_status $LACC)" >> $TMPRESULT
