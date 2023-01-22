@@ -7,20 +7,16 @@
 AUTH=`pass mastodon`	# Set up by web preferences 
 ACCOUNT_NUM=151263	# Possible to obtain by https://mastodon.online/api/v2/search
 
-COL_PURPLE='\033[0;35m'
-COL_GRAY='\033[1;30m'
-COL_NO='\033[0m'
-
 # temp files using in this script
 if [ ! -d "/tmp" ];then
 [[ ! -d "$HOME/.tmp" ]] && mkdir -p "$HOME/.tmp"
 	TMPCONTENT=$(mktemp ~/.tmp/mastodondigest.XXXXXX)
 	TMPHEADER=$(mktemp ~/.tmp/mastodondigest.XXXXXX)
-	TMPRESULT=$(mktemp ~/.tmp/mastodondigest.XXXXXX)
+	TMPRESULT=$(mktemp --suffix=".gmi" ~/.tmp/mastodondigest.XXXXXX)
 else
 	TMPCONTENT=$(mktemp /tmp/mastodondigest.XXXXXX)
 	TMPHEADER=$(mktemp /tmp/mastodondigest.XXXXXX)
-	TMPRESULT=$(mktemp /tmp/mastodondigest.XXXXXX)
+	TMPRESULT=$(mktemp --suffix=".gmi" /tmp/mastodondigest.XXXXXX)
 fi
 
 # get content via curl at $1
@@ -50,10 +46,12 @@ function get_last_status() {
 	LD=$(jq --raw-output '.[].created_at' <<< cat $TMPCONTENT)
 	LA=$(jq --raw-output '.[].account.username' <<< cat $TMPCONTENT)
 	LC=$(jq --raw-output '.[].content' <<< cat $TMPCONTENT)
+	# extract urls
+	LL=$(echo "$LC" | grep -Eo "<a href=\"(http|https|gopher|finger|gemini)://[a-zA-Z0-9./?=_%:-]+" | sed 's/<a href=\"//g' | sort -u | awk '{print "=> "$0}')
 	# remove all html tags from a content 
 	LC=$(echo "$LC" | sed 's/<[^>]*>//g')
 	LC=$(echo "$LC" | sed 's/|//g')
-	echo -e "${COL_PURPLE}@$LD${COL_NO} | ${COL_GRAY}$LA${COL_NO} | $LC"
+	echo -e "# $LD | $LA\n$LC\n$LL\n\n"
 }
 
 # starting link
@@ -69,9 +67,9 @@ done
 
 # print last status for every account id in the content
 for LACC in $(jq -r '.[].id' <<< cat $TMPCONTENT); do
-	echo -e $(get_last_status $LACC) >> $TMPRESULT
+	echo -e "$(get_last_status $LACC)" >> $TMPRESULT
 	echo -n "."
 done
 echo ""
 
-sort -h -r $TMPRESULT | fold -s | less -R
+amfora $TMPRESULT
