@@ -3,6 +3,7 @@
 # - Storing auth key in pass command
 # - Use curl command to access Mastodon API
 # - use jq command for parsing JSON
+# - amfora as a gemtext renderer
 
 AUTH=`pass mastodon`	# Set up by web preferences 
 ACCOUNT_NUM=151263	# Possible to obtain by https://mastodon.online/api/v2/search
@@ -51,7 +52,8 @@ function get_last_status() {
 	# remove all html tags from a content 
 	LC=$(echo "$LC" | sed 's/<[^>]*>//g')
 	LC=$(echo "$LC" | sed 's/|//g')
-	echo -e "# $LD | $LA\n$LC\n$LL\n\n"
+	# gemtext paragraph, and a tab char before the content (to avoid treating special gemtext characters as gemtext)
+	echo -e "\n## $LD | $LA\n\t$LC\n$LL\n\n"
 }
 
 # starting link
@@ -66,7 +68,9 @@ while [ -n "$NEXT_LINK" ]; do
 done
 
 # print last status for every account id in the content
-for LACC in $(jq -r '.[].id' <<< cat $TMPCONTENT); do
+echo -e "# mastodondigest.sh" >> $TMPRESULT
+# sort by last_status_at date given by mastodon API
+for LACC in $(jq 'sort_by(.last_status_at)' <<< cat $TMPCONTENT | jq -r '.[].id'); do
 	echo -e "$(get_last_status $LACC)" >> $TMPRESULT
 	echo -n "."
 done
