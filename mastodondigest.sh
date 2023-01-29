@@ -52,8 +52,13 @@ function get_last_status() {
 	# remove all html tags from a content 
 	LC=$(echo "$LC" | sed 's/<[^>]*>//g')
 	LC=$(echo "$LC" | sed 's/|//g')
-	# gemtext paragraph, and a \u200b (ZERO WIDTH SPACE) char before the content (to avoid treating special gemtext characters as gemtext)
-	echo -e "\n## $LD | $LA\n\u200b$LC\n$LL\n\n"
+	# account without any toots will give an empty results	
+	if [ -z "$LA" ]; then
+    		echo -e "\u200b"
+	else
+		# gemtext paragraph, and a \u200b (ZERO WIDTH SPACE) char before the content (to avoid treating special gemtext characters as gemtext)
+		echo -e "\n## $LD | $LA\n\u200b$LC\n$LL\n\n"
+	fi
 }
 
 # starting link
