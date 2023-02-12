@@ -39,8 +39,9 @@ function iterate_cotd() {
 				fi
 			fi
 		done < <(echo -en $COTD | grep -Po "=> \S+/")			# / at the end to avoid *.gmi
-		
-		let AVGSIZE/=5
+		NOTEMPTY=5
+		let NOTEMPTY-=$EMPTY
+		let AVGSIZE/=$NOTEMPTY
 		echo -e "$AVGSIZE\tchars\t$EMPTY\tempty capsules\t$PLINK" >> $FILE
 
 	done < <(echo -en $1 | grep -Po "=> /capsules-of-the-day-([0-9]|-)+/")	# through /capsules-of-the-day-2023-02-05/ pattern
@@ -49,11 +50,11 @@ function iterate_cotd() {
 # print summary of a $FILE
 function print_summary() {
 	echo "# DiscoGem top of the tops"
-	echo "The biggest index pages:"
+	echo "## The biggest index pages day:"
 	cat $FILE | sort -h -r | head -n 3
-	echo "The smallest index pages:"
+	echo "## The smallest index pages day:"
 	cat $FILE | sort -h | head -n 3
-	echo "The most useless:"
+	echo "## The most useless day:"
 	cat $FILE | sort -h -r -k 3 | head -n 3
 }
 
@@ -62,6 +63,6 @@ function print_summary() {
 PAGE=$(read_gemini "gemini://discogem.gmi.bacardi55.io/")
 
 echo -e $(iterate_cotd "$PAGE")
-sed '/^\s*$/d' $FILE								# dirty hack to remove empty lines in file, there must be a bug somewhere
+sed -i '/^\s*$/d' $FILE								# dirty hack to remove empty lines in file, there must be a bug somewhere
 
 print_summary
