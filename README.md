@@ -41,3 +41,9 @@ Script for watering a Astrobotany plant
 ## mastodondigest.sh
 
 Mastodon digest, read last post from all followed accounts by specified account
+
+## tott_discogem.sh
+
+Script gathering data from DiscoGem.
+
+[DiscoGem - Discover new capsules every day]: gemini://discogem.gmi.bacardi55.io/
