@@ -47,3 +47,7 @@ Mastodon digest, read last post from all followed accounts by specified account
 Script gathering data from DiscoGem.
 
 [DiscoGem - Discover new capsules every day]: gemini://discogem.gmi.bacardi55.io/
+
+## generate_file_dates.sh
+
+Script to parse a GemText file for links and describes links with last commit dates in local Git repository.
