@@ -51,3 +51,11 @@ Script gathering data from DiscoGem.
 ## generate_file_dates.sh
 
 Script to parse a GemText file for links and describes links with last commit dates in local Git repository.
+
+## regenerate_main_gophermap.sh  
+
+Script for gophermap automation - adding last phlog entry and date. 
+
+## regenerate_phlog_gophermap.sh
+
+Script for gophermap automation - adding phlog entries list. 
