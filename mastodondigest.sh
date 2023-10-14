@@ -48,7 +48,7 @@ function get_last_status() {
 	LA=$(jq --raw-output '.[].account.username' <<< cat $TMPCONTENT)
 	LC=$(jq --raw-output '.[].content' <<< cat $TMPCONTENT)
 	# extract urls
-	LL=$(echo "$LC" | grep -Eo "<a href=\"(http|https|gopher|finger|gemini)://[a-zA-Z0-9./?=_%:-]+" | sed 's/<a href=\"//g' | sort -u | awk '{print "=> "$0}')
+	LL=$(echo "$LC" | grep -Eo "<a href=\"(http|https|gopher|finger|gemini)://[a-zA-Z0-9./?=_%:-]+" | sed 's/<a href=\"//g' | sed "/tags/d" | sort -u | awk '{print "=> "$0}')
 	# remove all html tags from a content 
 	LC=$(echo "$LC" | sed 's/<[^>]*>//g')
 	LC=$(echo "$LC" | sed 's/|//g')
